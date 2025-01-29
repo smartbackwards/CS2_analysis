@@ -1,4 +1,6 @@
 import pandas as pd
+import os 
+import json
 
 def check_for_nans(ticks: pd.DataFrame, match_name:str):
     nan_indices = ticks[ticks["round"].isna()].index
@@ -24,7 +26,7 @@ def get_teams(ticks: pd.DataFrame):
     for team in teams:
         if str(team)!="nan":
             clean_teams.append(team)
-    return clean_teams
+    return sorted(clean_teams)
 
 def get_players(ticks: pd.DataFrame,teams:list):
     playerdict = {}
@@ -34,3 +36,13 @@ def get_players(ticks: pd.DataFrame,teams:list):
 
 def get_map(data_dir):
     return data_dir.split("-")[-1].replace("/","")
+
+def get_kill_death_occurrences(df, player):
+    df = df[pd.notna(df["attacker_team_name"])]
+    df_a = df[df["attacker_team_name"]!=df["victim_team_name"]]
+    return (df_a["attacker_name"]==player).sum(), (df["victim_name"]==player).sum()
+
+def get_match_info(data_directory):
+    with open(os.path.join(data_directory,"matchinfo.json"), 'r') as file:
+        data = json.load(file)
+    return data

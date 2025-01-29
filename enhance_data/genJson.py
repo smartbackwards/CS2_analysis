@@ -43,6 +43,7 @@ def gen_JSON(ticks_df: pd.DataFrame, rounds_df:pd.DataFrame, tournament:str, typ
     teams = get_teams(ticks_df)
     rounds = get_rounds_dict(rounds_df, teams)
     players = get_players(ticks_df, teams)
+    print(f'{teams[0]} {rounds[teams[0]]["roundsWon"]} - {rounds[teams[1]]["roundsWon"]} {teams[1]}')
     return {
             "teams":teams,
             "rounds":rounds,

@@ -6,6 +6,7 @@ from dem_to_csv.extractCsv import save_csvs, save_csv
 from utils.utils import check_for_nans, get_map 
 from enhance_data.adjustCsv import add_round_winners, add_buy_types
 from enhance_data.genJson import gen_JSON
+from utils.stats import identify_and_mark_trade_kills
 
 import json
 
@@ -14,6 +15,9 @@ def enhance_CSVs(target_dir, ticks_df, rounds_df, kills_df, tournament, type, is
     save_csv(enhanced_rounds_df, target_dir, "rounds")
     enhanced_rounds_df = add_buy_types(ticks_df, rounds_df, kills_df)
     save_csv(enhanced_rounds_df, target_dir, "rounds")
+    enhanced_kills_df = identify_and_mark_trade_kills(kills_df, rounds_df)
+    save_csv(enhanced_kills_df, target_dir, "kills")
+    
     map = get_map(target_dir)
     match_dict = gen_JSON(ticks_df, rounds_df, tournament, type, is_arena, map)
     with open(target_dir+"/matchInfo.json", "w") as outfile: 
